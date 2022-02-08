@@ -42,7 +42,7 @@ async function getSwapPrice(pq) {
 
     return {
       token0_symbol: pq.token0_symbol,
-      token1_symbol: pq.token0_symbol,
+      token1_symbol: pq.token1_symbol,
       ask_price: ask.ask_price_ftm,
       bid_price: bid.bid_price_ftm,
       token_out: ask.token_out,

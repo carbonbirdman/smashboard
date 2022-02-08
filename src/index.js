@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const dexes = require("../script/dexes");
+const dx = require("../script/dexes");
 const elements = require("./elements");
 var Sqrl = require("squirrelly");
 const port = 3000;
@@ -28,8 +28,9 @@ var priceTemplate = `
 <a href="header">header</a>
 <a href="sqrl">sqrl</a>
 <a href="json">json</a>
-<p> {{it.dex_ask}} {{ it.ask_price }} </p>
-<p> {{it.dex_bid}} {{ it.bid_price }} </p>
+<p> {{it.dex_ask}} {{ it.ask_price }} {{it.eth_in}}  {{it.token_out}} </p>
+<p> {{it.dex_bid}} {{ it.bid_price }} {{it.token_in}} {{it.eth_out}}</p>
+<p> {{ it.token0_symbol }} {{ it.token1_symbol }} </p>
 `;
 
 app.get("/", (req, res) => {
@@ -37,10 +38,23 @@ app.get("/", (req, res) => {
 });
 
 app.get("/price", (req, res) => {
+  var conn = dx.get_connection();
+  let swap_request = {
+    eth_in: "1",
+    dex_ask: "spooky",
+    dex_bid: "spirit",
+    token0_symbol: "FTM",
+    token1_symbol: "WBTC",
+    token0_address: dx.token_address["FTM"],
+    token1_address: dx.token_address["WBTC"],
+    conn
+  };
+  console.log(swap_request);
   elements
-    .getPriceArray("spooky", "spirit")
+    .getSwapPrice(swap_request)
     .then((priceArray) => {
-      res.send(Sqrl.render(priceTemplate, { priceArray }));
+      console.log(priceArray);
+      res.send(Sqrl.render(priceTemplate, priceArray));
     })
     .catch((err) => {
       console.log(err);
@@ -49,28 +63,28 @@ app.get("/price", (req, res) => {
 });
 
 app.get("/string", (req, res) => {
-  res.send(JSON.stringify(dexes.token_address));
+  res.send(JSON.stringify(dx.token_address));
 });
 
 app.get("/header", (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  res.send(dexes.token_address);
+  res.send(dx.token_address);
 });
 
 app.get("/sqrl", (req, res) => {
   //res.send(Sqrl.render(template, JSON.stringify(dexes.token_address)));
-  res.send(Sqrl.render(objTemplate, dexes.token_address));
+  res.send(Sqrl.render(objTemplate, dx.token_address));
   //res.send(Sqrl.render(compiled(dexes.token_address)));
 });
 
 app.get("/json", (req, res) => {
-  res.json(dexes.token_address);
+  res.json(dx.token_address);
 });
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
   //var conn = dexes.get_connection();
-  console.log(dexes.token_address);
+  console.log(dx.token_address);
 });
 
 // Returns: '<p>My favorite kind of cake is: Chocolate!</p>
