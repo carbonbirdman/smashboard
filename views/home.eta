@@ -1,0 +1,4 @@
+<!DOCTYPE html>
+<p>Price comparison</p>
+<p>  </p>
+<%= it.favorite %> because it is: <%= it.reasons.join(', ') %>

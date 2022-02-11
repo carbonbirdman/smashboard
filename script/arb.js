@@ -1,9 +1,9 @@
 // This script exercises the dex functions
 console.log("Starting up");
-const dx = require("./dexes");
-const px = require("./price");
+const dx = require("../src/dexes");
+const px = require("../src/price");
 const el = require("../src/elements");
-const routerABI = require("./router.json");
+const routerABI = require("../src/router.json");
 //console.log(dx);
 
 var conn = dx.get_connection();

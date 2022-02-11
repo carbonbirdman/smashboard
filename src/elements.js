@@ -1,6 +1,54 @@
 // Data and objects for display on page
-const dx = require("../script/dexes");
-const px = require("../script/price");
+const dx = require("./dexes");
+const px = require("./price");
+var conn = dx.get_connection();
+var eth_in = "1";
+
+let swap_requests = [
+  {
+    eth_in: eth_in,
+    dex_ask: "spirit",
+    dex_bid: "spooky",
+    token0_symbol: "FTM",
+    token1_symbol: "WBTC",
+    token0_address: dx.token_address["FTM"],
+    token1_address: dx.token_address["WBTC"],
+    conn
+  },
+  {
+    eth_in: eth_in,
+    dex_ask: "spirit",
+    dex_bid: "spooky",
+    token0_symbol: "FTM",
+    token1_symbol: "ETH",
+    token0_address: dx.token_address["FTM"],
+    token1_address: dx.token_address["ETH"],
+    conn
+  }
+];
+
+function newElement(symbol) {
+  return {
+    eth_in: eth_in,
+    dex_ask: "spirit",
+    dex_bid: "spooky",
+    token0_symbol: "FTM",
+    token1_symbol: symbol,
+    token0_address: dx.token_address["FTM"],
+    token1_address: dx.token_address[symbol],
+    conn
+  };
+}
+
+function getSwapList(tokens) {
+  var swap_list = [];
+  for (const element of tokens) {
+    swap_list.push(newElement(element));
+    console.log(element);
+  }
+  //console.log(swap_requests);
+  return swap_list;
+}
 
 // ASK
 async function getSwapPrice(pq) {
@@ -20,7 +68,7 @@ async function getSwapPrice(pq) {
       ask_router,
       pq.conn
     );
-    console.log(ask);
+    //console.log(ask);
 
     // BID
     const bid_factory = dx.factory_address[pq.dex_bid];
@@ -38,24 +86,38 @@ async function getSwapPrice(pq) {
       bid_router,
       pq.conn
     );
-    console.log(bid);
+    //console.log(bid);
+    const PRECISION = 2;
+    const FIXED = 4;
+    // do the maths on the calculation
 
     return {
       token0_symbol: pq.token0_symbol,
       token1_symbol: pq.token1_symbol,
-      ask_price: ask.ask_price_ftm,
-      bid_price: bid.bid_price_ftm,
-      token_out: ask.token_out,
+      ask_price: ask.ask_price_ftm.toFixed(FIXED),
+      bid_price: bid.bid_price_ftm.toFixed(FIXED),
+      token_out: ask.token_out.toFixed(FIXED),
       eth_in: ask.eth_in,
-      token_in: bid.token_in,
-      eth_out: bid.eth_out,
+      token_in: bid.token_in.toPrecision(PRECISION),
+      eth_out: bid.eth_out.toFixed(FIXED),
       dex_ask: pq.dex_ask,
       dex_bid: pq.dex_bid
     };
   } catch (err) {
-    console.log("Error ");
+    console.log("Error ", pq.ask_dex, pq.bid_dex);
     console.log(err);
-    return { err: "err" };
+    return {
+      token0_symbol: pq.token0_symbol,
+      token1_symbol: pq.token1_symbol,
+      ask_price: "NA",
+      bid_price: "NA",
+      token_out: "NA",
+      eth_in: "NA",
+      token_in: "NA",
+      eth_out: "NA",
+      dex_ask: pq.dex_ask,
+      dex_bid: pq.dex_bid
+    };
   }
 }
 
@@ -63,7 +125,14 @@ async function getPriceDumb() {
   return 10.0;
 }
 
+async function getSwaps(sreqs) {
+  return await Promise.all(sreqs.map(async (sreq) => await getSwapPrice(sreq)));
+}
+
 module.exports = {
   getSwapPrice: getSwapPrice,
-  getPriceDumb: getPriceDumb
+  getPriceDumb: getPriceDumb,
+  getSwaps: getSwaps,
+  swap_requests: swap_requests,
+  getSwapList: getSwapList
 };

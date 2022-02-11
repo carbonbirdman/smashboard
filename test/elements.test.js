@@ -1,5 +1,5 @@
 const el = require("../src/elements");
-const dx = require("../script/dexes");
+const dx = require("../src/dexes");
 //const pricey = el.getPriceSimple();
 //console.log(pricey);
 const token0_symbol = "FTM";

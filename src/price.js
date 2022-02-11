@@ -26,13 +26,13 @@ async function getAskPrice(eth_in, pair_address, factory, router, conn) {
   try {
     const token0_address = await pair_contract.token0();
     const token1_address = await pair_contract.token1();
-    console.log(token0_address, token1_address, weth_address);
+    //console.log(token0_address, token1_address, weth_address);
 
     if (token0_address == weth_address) {
-      console.log("eth first");
+      //console.log("eth first");
       var token_address = token1_address;
     } else if (token1_address == weth_address) {
-      console.log("eth second");
+      //console.log("eth second");
       var token_address = token0_address;
     } else {
       return "Error matching eth equivalent";
@@ -85,13 +85,13 @@ async function getBidPrice(token_in, pair_address, factory, router, conn) {
   try {
     const token0_address = await pair_contract.token0();
     const token1_address = await pair_contract.token1();
-    console.log(token0_address, token1_address, weth_address);
+    //console.log(token0_address, token1_address, weth_address);
 
     if (token0_address == weth_address) {
-      console.log("eth first");
+      //console.log("eth first");
       var token_address = token1_address;
     } else if (token1_address == weth_address) {
-      console.log("eth second");
+      //console.log("eth second");
       var token_address = token0_address;
     } else {
       return "Error matching eth equivalent";
