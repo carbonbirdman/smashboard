@@ -102,7 +102,10 @@ async function getBidPrice(token_in, pair_address, factory, router, conn) {
     const factor = Math.pow(10, weth_decimal) / Math.pow(10, token_decimal);
 
     const router_contract = new ethers.Contract(router, routerABI, conn);
-    const tokens_in_wei = token_in * Math.pow(10, token_decimal);
+    // don't do this
+    //const tokens_in_wei = token_in * Math.pow(10, token_decimal);
+    // do this
+    const tokens_in_wei = ethers.utils.parseUnits(token_in, token_decimal);
     var amount_out = await router_contract.getAmountsOut(tokens_in_wei, [
       token_address,
       weth_address

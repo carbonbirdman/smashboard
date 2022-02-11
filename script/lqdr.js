@@ -3,13 +3,11 @@
 const dx = require("../src/dexes");
 const px = require("../src/price");
 const el = require("../src/elements");
+const ethers = require("ethers");
 
 var conn = dx.get_connection();
 var eth_in = "1";
 
-//this is a linked list
-//swap_requests.push(new_price);
-// it has numeric indices Object.keys(swap_requests)
 let pq = {
   eth_in: eth_in,
   dex_ask: "spirit",

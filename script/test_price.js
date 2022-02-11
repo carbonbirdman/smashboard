@@ -95,9 +95,7 @@ factory = dx.factory_address[dex];
 router = dx.router_address[dex];
 factory_contract = new ethers.Contract(factory, factoryABI, conn);
 pair_address = factory_contract.getPair(token0_address, token1_address);
-px.getBidPrice(token_in.toString(), pair_address, factory, router, conn).then(
-  (bid_price) => {
-    bid_price["dex"] = dex;
-    console.log(bid_price);
-  }
-);
+px.getBidPrice("1", pair_address, factory, router, conn).then((bid_price) => {
+  bid_price["dex"] = dex;
+  console.log(bid_price);
+});
