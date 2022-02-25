@@ -21,6 +21,11 @@ web3.eth.getBlockNumber().then((blocknum) => {
 
   myContract
     .getPastEvents("Transfer", options)
-    .then((results) => console.log(results))
+    .then((results) => {
+      //console.log(results);
+      const criteria = (d) => d.logIndex > 20 && d.event === "Transfer";
+      const arr3 = results.filter(criteria);
+      console.log(arr3);
+    })
     .catch((err) => console.log(err));
 });
