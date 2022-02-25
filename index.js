@@ -76,15 +76,28 @@ var inputTemplate = `
 <!DOCTYPE html>
 <ul>
 <% it.forEach(function(entry) {%>
-<li><%= entry.dex_ask %> </li>
+<li><%= entry.dex_ask%> <%= entry.dex_bid%> </li>
 <%});%>
 </ul>
 `;
 
 app.get("/inputs", function (req, res) {
   //array with items to send
-  const list = ["LQDR", "ETH", "DAI", "SPA", "WBTC"];
-  var items = el.getSwapList(["LQDR", "ETH", "DAI", "SPA", "WBTC"]);
+  var items = el.getSwapList([
+    "LQDR",
+    "ETH",
+    "DAI",
+    "SPA",
+    "WBTC",
+    "ICE",
+    "MIM",
+    "CRV",
+    "LINK",
+    "SUSHI",
+    "BIFI",
+    "MIM",
+    "ANY"
+  ]);
   console.log(items);
   res.send(eta.render(inputTemplate, items));
 });
@@ -92,8 +105,8 @@ app.get("/inputs", function (req, res) {
 var outputTemplate = `
 <!DOCTYPE html>
 <ul>
-<%it.forEach(function(iti) {%>
-<li> <%= iti.token1_symbol %> <%= iti.eth_out %> </li>
+<% it.forEach(function(iti) {%>
+<li> <%= iti.dex_ask %> <%= iti.dex_bid%> <%= iti.token1_symbol%> <%= iti.eth_out%>    </li>
 <%});%>
 </ul>
 `;
@@ -104,12 +117,27 @@ function cutSwaps(swps) {
 
 app.get("/outputs", function (req, res) {
   //array with items to send
-  var items = el.getSwapList(["LQDR", "ETH", "DAI", "SPA", "WBTC"]);
+  var items = el.getSwapList([
+    "LQDR",
+    "ETH",
+    "DAI",
+    "SPA",
+    "WBTC",
+    "ICE",
+    "MIM",
+    "CRV",
+    "LINK",
+    "SUSHI",
+    "BIFI",
+    "MIM",
+    "ANY"
+  ]);
   el.getSwaps(items)
     .then((swapOutputs) => {
-      const jc = cutSwaps(swapOutputs);
-      console.log(jc);
-      eta.render(outputTemplate, jc);
+      //const jc = cutSwaps(swapOutputs);
+      //console.log(jc);
+      //console.log(jc[0][1]);
+      res.send(eta.render(outputTemplate, swapOutputs));
       //res.send(JSON.stringify(swapOutputs));
     })
     .catch((err) => {

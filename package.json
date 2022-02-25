@@ -8,12 +8,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "axios": "0.26.0",
     "ejs": "3.1.6",
     "eta": "1.12.3",
     "ethers": "5.5.4",
     "express": "4.17.2",
     "jest": "27.5.0",
     "react": "17.0.2",
+    "request": "2.88.2",
     "squirrelly": "8.0.8"
   },
   "devDependencies": {

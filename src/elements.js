@@ -27,23 +27,45 @@ let swap_requests = [
   }
 ];
 
-function newElement(symbol) {
-  return {
-    eth_in: eth_in,
-    dex_ask: "spirit",
-    dex_bid: "spooky",
-    token0_symbol: "FTM",
-    token1_symbol: symbol,
-    token0_address: dx.token_address["FTM"],
-    token1_address: dx.token_address[symbol],
-    conn
-  };
+function newElement(symbol, flip = false, dexa = "spooky", dexb = "spirit") {
+  if (flip) {
+    return {
+      eth_in: eth_in,
+      dex_ask: dexa,
+      dex_bid: dexb,
+      token0_symbol: "FTM",
+      token1_symbol: symbol,
+      token0_address: dx.token_address["FTM"],
+      token1_address: dx.token_address[symbol],
+      conn
+    };
+  } else {
+    return {
+      eth_in: eth_in,
+      dex_ask: dexb,
+      dex_bid: dexa,
+      token0_symbol: "FTM",
+      token1_symbol: symbol,
+      token0_address: dx.token_address["FTM"],
+      token1_address: dx.token_address[symbol],
+      conn
+    };
+  }
 }
 
 function getSwapList(tokens) {
   var swap_list = [];
   for (const element of tokens) {
     swap_list.push(newElement(element));
+    swap_list.push(newElement(element, true));
+    swap_list.push(newElement(element, false, "spirit", "proto"));
+    swap_list.push(newElement(element, true, "spirit", "proto"));
+    swap_list.push(newElement(element, false, "spooky", "proto"));
+    swap_list.push(newElement(element, true, "spooky", "proto"));
+    swap_list.push(newElement(element, false, "spirit", "morph"));
+    swap_list.push(newElement(element, true, "spirit", "morph"));
+    swap_list.push(newElement(element, false, "spooky", "morph"));
+    swap_list.push(newElement(element, true, "spooky", "morph"));
     console.log(element);
   }
   //console.log(swap_requests);
@@ -80,7 +102,7 @@ async function getSwapPrice(pq) {
       pq.conn
     );
     var bid = await px.getBidPrice(
-      ask.token_out,
+      ask.token_out.toString(),
       bid_pair.address,
       bid_factory,
       bid_router,
@@ -94,12 +116,12 @@ async function getSwapPrice(pq) {
     return {
       token0_symbol: pq.token0_symbol,
       token1_symbol: pq.token1_symbol,
-      ask_price: ask.ask_price_ftm.toFixed(FIXED),
-      bid_price: bid.bid_price_ftm.toFixed(FIXED),
-      token_out: ask.token_out.toFixed(FIXED),
+      ask_price: ask.ask_price_ftm, //.toFixed(FIXED),
+      bid_price: bid.bid_price_ftm, //.toFixed(FIXED),
+      token_out: ask.token_out, //.toFixed(FIXED),
       eth_in: ask.eth_in,
-      token_in: bid.token_in.toPrecision(PRECISION),
-      eth_out: bid.eth_out.toFixed(FIXED),
+      token_in: bid.token_in, //.toPrecision(PRECISION),
+      eth_out: bid.eth_out, //.toFixed(FIXED),
       dex_ask: pq.dex_ask,
       dex_bid: pq.dex_bid
     };
@@ -120,6 +142,9 @@ async function getSwapPrice(pq) {
     };
   }
 }
+
+// getting the price and formatting the price should be different functions
+// and separated
 
 async function getPriceDumb() {
   return 10.0;
