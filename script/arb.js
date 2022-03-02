@@ -19,8 +19,8 @@ const router = dx.router_address[dex];
 
 console.log("Getting pair");
 const ethers = require("ethers");
-const factoryABI = require("../src/factory.json");
-const pairABI = require("../src/pairs.json");
+const factoryABI = require("./factory.json");
+const pairABI = require("./pairs.json");
 
 const factory_contract = new ethers.Contract(factory, factoryABI, conn);
 const pair_address = factory_contract.getPair(token0_address, token1_address);
