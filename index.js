@@ -96,7 +96,9 @@ app.get("/inputs", function (req, res) {
     "SUSHI",
     "BIFI",
     "MIM",
-    "ANY"
+    "ANY",
+    "BNB",
+    "CREAM"
   ]);
   console.log(items);
   res.send(eta.render(inputTemplate, items));
@@ -130,8 +132,11 @@ app.get("/outputs", function (req, res) {
     "SUSHI",
     "BIFI",
     "MIM",
-    "ANY"
+    "ANY",
+    "BNB",
+    "CREAM"
   ]);
+  console.log(items);
   el.getSwaps(items)
     .then((swapOutputs) => {
       //const jc = cutSwaps(swapOutputs);
